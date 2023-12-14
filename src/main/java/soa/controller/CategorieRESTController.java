@@ -4,22 +4,24 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import soa.entities.Categorie;
 import soa.entities.Produit;
+import soa.repository.CategorieRepository;
 import soa.repository.ProduitRepository;
 
 @RestController // pour déclarer un service web de type REST
-//@CrossOrigin(origins = "http://localhost:4200")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/produits")  //    http://localhost:8080/produits
-public class ProduitRESTController {
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/Categories")  //    http://localhost:8080/produits
+public class CategorieRESTController {
     @Autowired // pour l'injection de dépendances
-    private ProduitRepository produitRepos;
+    private CategorieRepository categorieRepos;
 
     //  Message d'accueil
     //  http://localhost:8080/produits/index  (GET)
     @GetMapping(value ="/index" )
     public String accueil() {
-        return "BienVenue au service Web REST 'produits'.....";
+        return "BienVenue au service Web REST 'Categories'.....";
     }
 
     //  Afficher la liste des produits
@@ -31,8 +33,8 @@ public class ProduitRESTController {
             // spécifier le format de retour en XML
             produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
     )
-    public  List<Produit> getAllProduits() {
-        return produitRepos.findAll();
+    public  List<Categorie> getAllCategorie() {
+        return categorieRepos.findAll();
 
     }
 
@@ -44,20 +46,21 @@ public class ProduitRESTController {
             // spécifier le format de retour en XML
             produces = { MediaType.APPLICATION_JSON_VALUE }
     )
-    public Produit getProduit(@PathVariable Long id) {
-        Produit p =produitRepos.findById(id).get();
+    public Categorie getCategorie(@PathVariable Long id) {
+    	Categorie p =categorieRepos.findById(id).get();
         return p;
     }
 
     // Supprimer un produit par 'id' avec la méthode 'GET'
     //  http://localhost:8080/produits/delete/{id}  (GET)
+    @GetMapping(
+            // spécifier le path de la méthode
+            value = "/delete/{id}")
+    public void deleteCategorie(@PathVariable Long id)
+    {
+    	categorieRepos.deleteById(id);
+    }
 
- // Supprimer un produit avec la méthode 'DELETE'
- // http://localhost:8080/produits/{id} (DELETE)
- @DeleteMapping(value = "/{id}")
- public void deleteProduit(@PathVariable Long id) {
-     produitRepos.deleteById(id);
- }
     //  ajouter un produit avec la méthode "POST"
     //  http://localhost:8080/produits/   (POST)
     @PostMapping(
@@ -66,22 +69,22 @@ public class ProduitRESTController {
             //spécifier le format de retour
             produces = { MediaType.APPLICATION_JSON_VALUE }
     )
-    public Produit saveProduit(@RequestBody Produit p)
+    public Categorie saveCategorie(@RequestBody Categorie p)
     {
-        return produitRepos.save(p);
+        return categorieRepos.save(p);
     }
 
     //  modifier un produit avec la méthode "PUT"
     //  http://localhost:8080/produits/   (PUT)
     @PutMapping(
             // spécifier le path de la méthode
-            value = "/{id}"  ,
+            value = "/"  ,
             //spécifier le format de retour
             produces = { MediaType.APPLICATION_JSON_VALUE  }
     )
-    public Produit updateProduit(@RequestBody Produit p)
+    public Categorie updateProduit(@RequestBody Categorie p)
     {
-        return produitRepos.save(p);
+        return categorieRepos.save(p);
     }
 
     // Supprimer un produit  avec la méthode 'DELETE'
@@ -89,9 +92,9 @@ public class ProduitRESTController {
     @DeleteMapping(
             // spécifier le path de la méthode
             value = "/")
-    public void deleteProduit(@RequestBody Produit p)
+    public void deleteCategorie(@RequestBody Categorie p)
     {
-        produitRepos.delete(p);
+    	categorieRepos.delete(p);
     }
 
 }
