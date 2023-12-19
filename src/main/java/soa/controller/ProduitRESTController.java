@@ -31,9 +31,12 @@ public class ProduitRESTController {
             // spécifier le format de retour en XML
             produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
     )
-    public  List<Produit> getAllProduits() {
+    public  List<Produit> getAllProduits(@RequestParam(required = false) String designation) {
+    	 if (designation != null) {
+    	        return produitRepos.findByDesignation(designation);
+    	    } else {
         return produitRepos.findAll();
-
+    	    }
     }
 
     //  Afficher un produit en spécifiant son 'id'
